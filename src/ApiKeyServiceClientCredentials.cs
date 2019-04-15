@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Threading;
 using System;
 
-namespace Theatreers.Reviews
+namespace Theatreers.Review
 {
         /// </summary>
         class ApiKeyServiceClientCredentials : ServiceClientCredentials

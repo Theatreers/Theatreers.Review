@@ -1,5 +1,5 @@
 
-namespace Theatreers.Reviews
+namespace Theatreers.Review
 {
 
     public class ReviewerMessage {

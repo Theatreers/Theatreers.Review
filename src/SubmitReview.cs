@@ -12,7 +12,7 @@ using System.Threading;
 using Microsoft.Azure.WebJobs.ServiceBus;
 
 
-namespace Theatreers.Reviews
+namespace Theatreers.Review
 {
     public static class SubmitReview
     {

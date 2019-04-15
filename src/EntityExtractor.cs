@@ -15,7 +15,7 @@ using Microsoft.Rest;
 using System.Threading;
 using Microsoft.Azure.WebJobs.Host;
 
-namespace Theatreers.Reviews
+namespace Theatreers.Review
 {
     public static class EntityExtractor
     {
