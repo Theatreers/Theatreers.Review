@@ -1,0 +1,37 @@
+pool:
+  name: Hosted Ubuntu 1604
+variables:
+  buildPublishPath: '$(Build.ArtifactStagingDirectory)/publish-path/'
+  dotnetBuildOutputPath: '$(Build.ArtifactStagingDirectory)/build-output/'
+  projectName: 'Theatreers.Review'
+steps:
+# Setup the Sonar Cloud for analysis
+- task: SonarSource.sonarcloud.14d9cde6-c1da-4d55-aa01-2965cd301255.SonarCloudPrepare@1
+  displayName: 'Prepare analysis on SonarCloud'
+  inputs:
+    SonarCloud: 'Theatreers Sonarcloud'
+    organization: 'theatreers'
+    projectKey: $(projectName)
+    projectName: $(projectName)
+# Build the solution natively on the agent
+# Allow sonar cloud to analyse as part of the next task.
+- task: DotNetCoreCLI@2
+  displayName: 'Build project'
+  inputs:
+    projects: 'src/*.csproj'
+    arguments: '--output $(dotnetBuildOutputPath) --configuration Release'
+# Execute the Sonar Cloud Analysis, and push to Sonar Cloud
+- task: SonarSource.sonarcloud.ce096e50-6155-4de8-8800-4221aaeed4a1.SonarCloudAnalyze@1
+  displayName: 'Run Code Analysis'
+# Zip the files to be published
+- task: ArchiveFiles@2
+  displayName: 'Archive files'
+  inputs:
+    rootFolderOrFile: '$(dotnetBuildOutputPath)'
+    includeRootFolder: false
+    archiveFile: '$(buildPublishPath)/$(Build.BuildId).zip'
+# Publish the 
+- task: PublishPipelineArtifact@0
+  displayName: 'Publish Pipeline Artifact'
+  inputs:
+    targetPath: '$(buildPublishPath)'

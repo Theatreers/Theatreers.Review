@@ -1,0 +1,13 @@
+pool:
+  name: Hosted Ubuntu 1604
+variables:
+  buildPublishPath: '$(Build.ArtifactStagingDirectory)/publish-path/'
+  dotnetBuildOutputPath: '$(Build.ArtifactStagingDirectory)/build-output/'
+  projectName: 'Theatreers.Review'
+steps:
+# Build the solution natively on the agent
+- task: DotNetCoreCLI@2
+  displayName: 'Build project'
+  inputs:
+    projects: 'src/*.csproj'
+    arguments: '--output $(dotnetBuildOutputPath) --configuration Release'
