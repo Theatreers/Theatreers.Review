@@ -2,8 +2,10 @@
 
 Review API used as part of the Theatreers Project
 
-CI: [![Build Status](https://dev.azure.com/theatreers/Theatreers/_apis/build/status/Theatreers.Review%20CI?branchName=master)](https://dev.azure.com/theatreers/Theatreers/_build/latest?definitionId=80&branchName=master)
-Nightly: [![Build Status](https://dev.azure.com/theatreers/Theatreers/_apis/build/status/Theatreers.Review%20Nightly?branchName=master)](https://dev.azure.com/theatreers/Theatreers/_build/latest?definitionId=79&branchName=master)
+| CI Pipeline                                                                                                                                                                                                             | Nightly Pipeline                                                                                                                                                                                                             |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [![Build Status](https://dev.azure.com/theatreers/Theatreers/_apis/build/status/Theatreers.Review%20CI?branchName=master)](https://dev.azure.com/theatreers/Theatreers/_build/latest?definitionId=80&branchName=master) | [![Build Status](https://dev.azure.com/theatreers/Theatreers/_apis/build/status/Theatreers.Review%20Nightly?branchName=master)](https://dev.azure.com/theatreers/Theatreers/_build/latest?definitionId=79&branchName=master) |
+|                                                                                                                                                                                                                         | [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Theatreers.Review&metric=alert_status)](https://sonarcloud.io/dashboard?id=Theatreers.Review)                                               |
 
 ## Getting Started
 
