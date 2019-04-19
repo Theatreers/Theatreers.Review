@@ -15,6 +15,7 @@ namespace Theatreers.Review
         public string reviewerUser {get; set;}
         public string sentiment {get; set;}
         public string verbatim {get; set;}
+        public string relatesto {get; set;}
     }
 
     public class DecoratedReviewerMessage : ReviewerMessage {        
