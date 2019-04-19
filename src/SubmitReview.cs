@@ -7,48 +7,40 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using Microsoft.Azure.WebJobs.ServiceBus;
-
 
 namespace Theatreers.Review
 {
     public static class SubmitReview
     {
-        [FunctionName("SubmitReview")]
-        public static IActionResult Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
-            ILogger log,
-            [ServiceBus("newreview", EntityType.Topic, Connection = "serviceBusConnectionString")] ICollector<ReviewerMessage> outputs
-            )
-        {
-            string rawRequestBody = new StreamReader(req.Body).ReadToEnd();
-            ReviewerMessage reviewerMessageObject = JsonConvert.DeserializeObject<ReviewerMessage>(rawRequestBody);
-
-            try
-            {
-                outputs.Add(reviewerMessageObject);
-                return new NoContentResult();
-            }
-            catch (Exception ex)
-            {
-                return new BadRequestObjectResult($"{ex.Message}");
-            }
-        }
-
-        /*[FunctionName("SubmitReviewAsync")]
+        [FunctionName("SubmitReviewAsync")]
         public static async Task<IActionResult> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
             ILogger log,             
-            [ServiceBus("newreview", EntityType.Topic, Connection = "topicConnectionString")] IAsyncCollector<ReviewerMessage> outputs
+            [ServiceBus("newreview", EntityType.Topic, Connection = "topicConnectionString")] IAsyncCollector<string> outputs
             )
         {
-            string rawRequestBody = new StreamReader(req.Body).ReadToEnd();
-            ReviewerMessage reviewerMessageObject = JsonConvert.DeserializeObject<ReviewerMessage>(rawRequestBody);
+            string rawRequestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            string CorrelationId = Guid.NewGuid().ToString();  
+            string statusCheckEndpoint = $"{Environment.GetEnvironmentVariable("statusCheckURL")}/{CorrelationId}";
 
-            await outputs.AddAsync(reviewerMessage);
-            return new AcceptedResult();
-        }*/
+            string reviewerMessageEnvelope = MessageHelper.DecorateJsonBody(rawRequestBody, 
+                new Dictionary<string, JToken>(){
+                    { "RequestCorrelationId", CorrelationId},
+                    { "RequestCreatedAt", DateTime.Now},
+                    { "RequestStatus", statusCheckEndpoint}
+                }
+            );
+
+            await outputs.AddAsync(reviewerMessageEnvelope);
+
+            AcceptedResult acceptedResultObject = new AcceptedResult();
+            acceptedResultObject.Location = statusCheckEndpoint;
+            return (ActionResult) acceptedResultObject;
+        }
     }
 }
